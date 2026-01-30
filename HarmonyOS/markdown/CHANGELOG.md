@@ -1,3 +1,9 @@
+## v1.0.11 (2026-01-30)
+### Added
+
+- `ohos` ohpm supports build artifacts for the x86_64 architecture on emulator.
+
+
 ## v1.0.10 (2026-01-30)
 ### Added
 
