@@ -353,6 +353,10 @@ export class MarkdownController {
   get typingSpeed(): number | undefined {
     return this.option.typingSpeed;
   }
+  set typingStep(value: number | undefined) {
+    log.i(`set typingStep ${value}`);
+    this.option.typingStep = value;
+  }
   get typingStep(): number | undefined {
     return this.option.typingStep;
   }

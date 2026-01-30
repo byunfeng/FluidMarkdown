@@ -3,10 +3,15 @@
     "name": "markdown",
     "type": "har",
     "deviceTypes": [
-      "default"
+      "default",
+      "tablet",
+      "2in1"
     ],
-    "requestPermissions": [
-      { "name": "ohos.permission.INTERNET" }
+    "metadata": [
+      {
+        "name": "metaInfo_module_markdown",
+        "value": "markdown"
+      }
     ]
   }
 }

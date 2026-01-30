@@ -887,7 +887,7 @@ class MathStyled extends Styled {
         request: {
           content:  this.node?.content || '',
           hash: this.node?.mathHash,
-          fontSize: font?.fontSize,
+          fontSize: vp2px(font?.fontSize),
           fontColor: font?.fontColor ? MDColor.toHex(font?.fontColor) : undefined,
         },
         onResourceLoaded: (_span) => {
@@ -896,22 +896,25 @@ class MathStyled extends Styled {
         onMeasure: (span, _measureInfo) => {
           if (span.imageSource) {
             const imageInfo = span.imageSource.getImageInfoSync();
-            return {
-              width: MDLength.px2vp(imageInfo.size.width).value,
-              height: MDLength.px2vp(imageInfo.size.height).value,
-            };
+            let width: number = MDLength.px2vp(imageInfo.size.width).value;
+            const widthMax = group.blockArea?.width?.value ?? width;
+            width = widthMax < width ? widthMax : width;
+            const height = MDLength.px2vp(imageInfo.size.height).value * width / (MDLength.px2vp(imageInfo.size.width).value || 1);
+            return { width,  height };
           }
           return { width: 0 };
         },
         onDraw: (span, context, drawInfo) => {
           if (span.imageSource) {
-            const imageInfo = span.imageSource.getImageInfoSync();
+            const width = MDLength.vp2px(span.metrics.width).value;
+            const height = MDLength.vp2px(span.metrics.height ?? 0).value;
+            const baseline = drawInfo.baseline + height * 2/9;
             const pixelMap = span.imageSource.createPixelMapSync();
             context.canvas.drawImageRect(pixelMap, {
               left: drawInfo.x,
-              top: drawInfo.baseline - imageInfo.size.height * 8 / 9,
-              right: drawInfo.x + imageInfo.size.width,
-              bottom: drawInfo.baseline,
+              top: baseline - height,
+              right: drawInfo.x + width,
+              bottom: baseline,
             });
             pixelMap.release();
           }
@@ -1033,7 +1036,13 @@ class ImageStyled extends Styled {
     ImageStyled.building(this, option, this.node?.src, this.node?.alt);
   }
   static building(that: Styled, option: IStyledBuild, src: string, _alt?: string) {
-    const group = StyledObject.group({ styled: that });
+    const group = StyledObject.group({ styled: that }, [
+      new StyledGestureValue({
+        onClick: event => {
+          option.engine.event?.invokeClickGesture(that.node!, event);
+        },
+      }),
+    ]);
     option.didCreateStyled(group);
 
     const request: IImageServiceRequest = { url: src };

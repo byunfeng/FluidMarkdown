@@ -1,3 +1,14 @@
+## v1.0.10 (2026-01-30)
+### Added
+
+- `ohos` Added `LaTeX` math formula support, leveraging `formula_hybrid` to generate formula images.
+- `ohos` Added `click event` to the Image node.
+
+### Fixed
+
+- `ohos` Fixed an issue where Unicode surrogate pairs were not rendered correctly during streaming output.
+
+
 ## v1.0.9 (2026-01-15)
 ### Added
 

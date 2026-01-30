@@ -1,7 +1,5 @@
-/node_modules
+.cxx
+/build/
 /oh_modules
-/.preview
-/build
-/.cxx
-/.test
-/src/main/resources/rawfile/backend-web
+oh-package-lock.json5
+.DS_Store

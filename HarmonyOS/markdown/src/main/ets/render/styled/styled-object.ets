@@ -271,8 +271,20 @@ export class StyledObject extends MutableStyledString {
             real: object,
           };
         }
+        const hasHighSurrogateTail = (text: string) => {
+          if (text.length === 0) {
+            return false;
+          }
+          const code = text.charCodeAt(text.length - 1);
+          return code >= 0xD800 && code <= 0xDBFF;
+        }
+        let revise: number = 0
+        const currentString = this.getString();
+        while (hasHighSurrogateTail(currentString.substring(ele.start, ele.start + ele.length + revise))) {
+          revise++;
+        }
         return {
-          object: this.subStyledString(ele.start, ele.length),
+          object: this.subStyledString(ele.start, ele.length + revise),
           real: object,
         };
       });

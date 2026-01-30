@@ -120,6 +120,8 @@ function inlineMath(state, silent) {
     return true;
 }
 function blockMath(state, start, end, silent) {
+    return false  //disabled
+
     let found = false;
     let pos = state.bMarks[start] + state.tShift[start];
     let max = state.eMarks[start];
@@ -183,6 +185,8 @@ function blockMath(state, start, end, silent) {
     return true;
 }
 function blockBareMath(state, start, end, silent) {
+    return false  //disabled
+
     const startPos = state.bMarks[start] + state.tShift[start];
     const startMax = state.eMarks[start];
     const firstLine = state.src.slice(startPos, startMax);

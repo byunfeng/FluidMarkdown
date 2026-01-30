@@ -1,12 +1,12 @@
 {
-  "name": "fluid-markdown",
-  "version": "1.0.9",
-  "description": "Streaming Markdown engine for AI chat on mobile.",
-  "keywords": [ "markdown", "chat", "native", "stream-output", "ai", "ios", "android", "harmonyos" ],
-  "homepage": "https://github.com/antgroup/FluidMarkdown",
-  "compatibleSdkVersion": "15",
-  "main": "Index.ets",
-  "author": "jiayou-tss",
   "license": "Apache-2.0",
-  "dependencies": {}
+  "devDependencies": {},
+  "author": "",
+  "name": "@alipay/markdown",
+  "description": "Please describe the basic information.",
+  "main": "Index.ets",
+  "version": "1.0.0",
+  "dependencies": {
+    "liblatexentry.so": "file:./src/main/cpp/types/liblatexentry"
+  }
 }

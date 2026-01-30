@@ -39,8 +39,8 @@ export class AstService extends Service {
     const plugins = [
       plugin_footnote,
       plugin_emoji,
-      // plugin_sub,
-      // plugin_sup,
+      plugin_sub,
+      plugin_sup,
     ];
     plugins.forEach(ele => markdown_it.use(ele));
 

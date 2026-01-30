@@ -192,6 +192,7 @@ export struct EmbedComponent {
       offset = Math.min(this.content.length, targetContent.length);
     }
     const step = this.controller.typing.step;
+    const speed = this.controller.typing.speed;
     const currentLayers: Record<string, StyledEmbed> = {};
 
     const hasMore = (): boolean => {
@@ -210,7 +211,7 @@ export struct EmbedComponent {
     this.controller!.typing.typingTimer.onDidStop = () => {};
     this.controller!.typing.completed = () => offset >= targetContent.length;
 
-    log.i(`${this.ID} attach for typing, mode: ${mode} offset: ${offset} targetLength: ${targetContent.length}`);
+    log.i(`${this.ID} attach for typing, mode: ${mode} offset: ${offset} targetLength: ${targetContent.length} step: ${step} speed: ${speed}`);
 
     const currentContent = StyledObject.root(this.area, this.styles)
       .on<IStyledObjectAppendEvent>(EStyledObjectEvent.DidAppend, event => {
@@ -278,7 +279,7 @@ export struct EmbedComponent {
         //  notify finish
         this.controller?.typing.emit<ITypingFinishEvent>(ETypingEvent.Finish, {});
       }
-    }, this.controller.typing.speed);
+    }, speed);
   }
   private onRootTypingPause = (_e: ITypingPauseEvent) => {
     this.controller?.typing.pause();
