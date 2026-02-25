@@ -5,28 +5,28 @@ plugins {
 }
 
 android {
-    namespace 'com.fluid.afm'
-    compileSdk 35
+    namespace = 'com.fluid.afm'
+    compileSdk = 35
 
     defaultConfig {
-        applicationId "com.fluid.afm"
-        minSdk 21
-        targetSdk 35
-        versionCode 1
-        versionName "1.0"
+        applicationId = "com.fluid.afm"
+        minSdk = 21
+        targetSdk = 35
+        versionCode = 1
+        versionName = "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled = false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
         jvmTarget = '11'
