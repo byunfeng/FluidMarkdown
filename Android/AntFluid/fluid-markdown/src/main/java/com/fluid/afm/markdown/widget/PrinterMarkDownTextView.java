@@ -184,6 +184,7 @@ public class PrinterMarkDownTextView extends AppCompatTextView implements IMarkd
             MDLogger.e(TAG, "appendPrinting printing has not started!");
             return;
         }
+        mMarkdownParser.setPrintingState(true);
         if (append) {
             mOriginText += content;
         } else {
@@ -214,20 +215,24 @@ public class PrinterMarkDownTextView extends AppCompatTextView implements IMarkd
             return;
         }
         isStarted = false;
-        if (!isPrinting) {
-            return;
-        }
         mEndMessage = endMessage;
         isStopByUser = true;
         MAIN_HANDLER.removeCallbacks(mPrintTask);
-        isPrinting = false;
         mMarkdownParser.setPrintingState(false);
         if (!TextUtils.isEmpty(endMessage)) {
             mEndMessage = endMessage;
         }
+        if (mParsedContentText == null) {
+            isPrinting = false;
+            return;
+        }
+        isPrinting = false;
         clearGradient();
         boolean printAll = mCurrentPrintIndex >= mParsedContentText.length() - 1;
         SpannableStringBuilder span = handleSpan(mParsedContentText, mCurrentPrintIndex, printAll ? null : mEndMessage);
+        if (span == null) {
+            span = new SpannableStringBuilder(mParsedContentText);
+        }
         if (!printAll) {
             setEndMessageStyle(span);
         }
@@ -333,7 +338,6 @@ public class PrinterMarkDownTextView extends AppCompatTextView implements IMarkd
         if (end >= mParsedContentText.length()) {
             MDLogger.i(TAG, "end >= spannablePrintText.length()");
             isPrinting = false;
-            mMarkdownParser.setPrintingState(false);
             setTextSafely(mParsedContentText);
             onStopPrinting();
         } else {

@@ -220,41 +220,50 @@ public class JLatexMathPlugin extends AbstractMarkwonPlugin implements StreamOut
                 // because Android will draw formula for each line of text, thus
                 // leading to formula duplicated (drawn on each line of text)
                 visitor.builder().append(prepareLatexTextPlaceholder(latex));
-                handleVisitorAndJLatex(visitor,latex,length,"BlockVisitor");
+                handleVisitorAndJLatex(visitor, latex, length, true);
                 visitor.blockEnd(jLatexMathBlock);
             }
         });
     }
 
-    private void handleVisitorAndJLatex(MarkwonVisitor visitor,String latex,int length,String tag){
+    private void handleVisitorAndJLatex(
+            @NonNull MarkwonVisitor visitor,
+            @NonNull String latex,
+            int length,
+            boolean isBlock) {
 
-        if(TextUtils.isEmpty(latex)){
+        if (TextUtils.isEmpty(latex)) {
             return;
         }
 
-        AsyncDrawableSpan span = mLatexDesCache.get(latex);
+        final String cacheKey = (isBlock ? "block:" : "inline:") + latex;
+        AsyncDrawableSpan span = mLatexDesCache.get(cacheKey);
         if (isStreamingOutput() && span != null) {
-//            if (span.getDrawable().hasResult()) {
-//                Drawable drawable = span.getDrawable().getResult();
-//                ImageSpan imageSpan = new ImageSpan(drawable);
-//                visitor.setSpans(length, imageSpan);
-//            } else {
-                visitor.setSpans(length, span);
-//            }
+            visitor.setSpans(length, span);
         } else {
             final MarkwonConfiguration configuration = visitor.configuration();
-            span = new JLatexAsyncDrawableSpan(
-                    configuration.theme(),
-                    new JLatextAsyncDrawable(
-                            latex,
-                            jLatextAsyncDrawableLoader,
-                            "BlockVisitor".equals(tag)?jLatexBlockImageSizeResolver:inlineImageSizeResolver,
-                            null,
-                            true),
-                    config.theme.blockTextColor()
+            final JLatextAsyncDrawable asyncDrawable = new JLatextAsyncDrawable(
+                    latex,
+                    jLatextAsyncDrawableLoader,
+                    isBlock ? jLatexBlockImageSizeResolver : inlineImageSizeResolver,
+                    null,
+                    true
             );
+            if (isBlock) {
+                span = new JLatexAsyncDrawableSpan(
+                        configuration.theme(),
+                        asyncDrawable,
+                        config.theme.blockTextColor()
+                );
+            } else {
+                span = new JLatexInlineAsyncDrawableSpan(
+                        configuration.theme(),
+                        asyncDrawable,
+                        config.theme.inlineTextColor()
+                );
+            }
             visitor.setSpans(length, span);
-            mLatexDesCache.put(latex,span);
+            mLatexDesCache.put(cacheKey, span);
         }
     }
 
@@ -277,7 +286,7 @@ public class JLatexMathPlugin extends AbstractMarkwonPlugin implements StreamOut
                 // because Android will draw formula for each line of text, thus
                 // leading to formula duplicated (drawn on each line of text)
                 visitor.builder().append(prepareLatexTextPlaceholder(latex));
-                handleVisitorAndJLatex(visitor,latex,length,"InlineVisitor");
+                handleVisitorAndJLatex(visitor, latex, length, false);
             }
         });
     }
